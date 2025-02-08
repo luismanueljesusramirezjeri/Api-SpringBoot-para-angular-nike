@@ -1,0 +1,153 @@
+CREATE DATABASE IF NOT EXISTS developmentaa;
+
+USE developmentaa;
+
+CREATE TABLE Product (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(10) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    price DOUBLE NOT NULL,
+    stock_quantity INT NOT NULL,
+    category VARCHAR(50)
+);
+
+
+-- new  Tabla Supplier
+CREATE TABLE Supplier (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    contact_info VARCHAR(255),
+    email VARCHAR(150),
+    phone_number VARCHAR(20),
+    address VARCHAR(255),
+    city VARCHAR(100),
+    country VARCHAR(100),
+    website_url VARCHAR(255)
+);
+
+
+-- new  Tabla Review
+CREATE TABLE Review (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,  -- Identificador único de la reseña, con autoincremento
+    rating INT,  -- Calificación entre 1 y 5
+    comment VARCHAR(1000),  -- Comentario de la reseña
+    reviewer_name VARCHAR(255),  -- Nombre del revisor
+    reviewer_email VARCHAR(255),  -- Correo electrónico del revisor
+    review_title VARCHAR(255),  -- Título corto para la reseña
+    helpful_votes INT DEFAULT 1,  -- Votos útiles, por defecto 1
+    is_verified BIT DEFAULT 0  -- Si la reseña está verificada o no (0 = No, 1 = Sí)
+);
+
+
+
+
+
+-- new Tabla Warehouse
+CREATE TABLE Warehouse (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,              -- Identificador único del almacén
+    name VARCHAR(100) NOT NULL,                         -- Nombre del almacén
+    location VARCHAR(100) NOT NULL,                     -- Ubicación del almacén
+    capacity INT NOT NULL,                              -- Capacidad total del almacén (número máximo de productos que puede almacenar)
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',  -- Estado del almacén (activo o inactivo)
+    manager_name VARCHAR(100) NULL,                     -- Nombre del encargado del almacén (opcional)
+    manager_contact VARCHAR(50) NULL                 -- Contacto del encargado (opcional)
+);
+
+
+CREATE TABLE Products (
+    Id BIGINT AUTO_INCREMENT PRIMARY KEY,      -- Identificador único, autoincremental
+    Code NVARCHAR(50) NOT NULL,                -- Código único del producto
+    Name NVARCHAR(100) NOT NULL,               -- Nombre del producto
+    Description NVARCHAR(100) NULL,            -- Descripción del producto (opcional)
+    Price DECIMAL(10, 2) NOT NULL,             -- Precio del producto
+    StockQuantity INT NOT NULL DEFAULT 0,      -- Cantidad en stock (con valor predeterminado de 0)
+    Category NVARCHAR(50) NULL,                -- Categoría del producto (opcional)
+    ImageUrl NVARCHAR(255) NULL,               -- Ruta o URL de la imagen del producto (opcional)
+    ImageLoaded BIT NOT NULL DEFAULT 0         -- Estado: 0 = No cargada, 1 = Cargada
+);
+
+
+
+-- Inserción de 5 productos sin imágenes
+INSERT INTO Products (Code, Name, Description, Price, StockQuantity, Category, ImageUrl, ImageLoaded)
+VALUES 
+('P001', 'Teclado Mecánico', 'Teclado mecánico retroiluminado', 49.99, 15, 'Accesorios', NULL, 0),
+('P002', 'Mouse Inalámbrico', 'Mouse ergonómico con conexión Bluetooth', 29.99, 25, 'Accesorios', NULL, 0),
+('P003', 'Monitor 24 pulgadas', 'Monitor Full HD con panel IPS', 129.99, 10, 'Electrónica', NULL, 0),
+('P004', 'Audífonos', 'Audífonos inalámbricos con cancelación de ruido', 89.99, 30, 'Electrónica', NULL, 0),
+('P005', 'Silla Gamer', 'Silla ergonómica ajustable', 199.99, 5, 'Muebles', NULL, 0);
+
+
+
+
+INSERT INTO Product (code, name, description, price, stock_quantity, category)
+VALUES 
+    ('P001', 'Laptop', 'Laptop de 15 pulgadas, 8GB RAM, SSD 256GB', 1200.50, 25, 'Electrónica'),
+    ('P002', 'Smartphone', 'Smartphone Android con 128GB de almacenamiento', 850.00, 50, 'Electrónica'),
+    ('P003', 'Escritorio', 'Escritorio de madera con 3 cajones', 300.75, 10, 'Muebles'),
+    ('P004', 'Silla', 'Silla ergonómica para oficina', 150.00, 30, 'Muebles'),
+    ('P005', 'Audífonos', 'Audífonos inalámbricos con cancelación de ruido', 200.00, 40, 'Accesorios');
+
+-- Inserción de 5 datos de ejemplo con empresas de zapatillas y relacionadas
+INSERT INTO Supplier (name, contact_info, email, phone_number, address, city, country, website_url) 
+VALUES 
+    ('Nike Inc.', 'John Doe - Director de ventas', 'contacto@nike.com', '800-123-4567', 'One Bowerman Drive', 'Beaverton', 'Estados Unidos', 'https://www.nike.com'),
+    ('Adidas', 'Jane Smith - Gerente de cuentas', 'atencion@adidas.com', '800-234-5678', 'Adidas Strasse 1', 'Herzogenaurach', 'Alemania', 'https://www.adidas.com'),
+    ('Puma', 'Carlos López - Encargado de distribución', 'soporte@puma.com', '800-345-6789', 'Puma Way 45', 'Herzogenaurach', 'Alemania', 'https://www.puma.com'),
+    ('Reebok', 'Sofia García - Coordinadora de ventas', 'info@reebok.com', '800-456-7890', '25 Drydock Avenue', 'Boston', 'Estados Unidos', 'https://www.reebok.com'),
+    ('Under Armour', 'Luis Rodríguez - Ejecutivo de ventas', 'contact@underarmour.com', '800-567-8901', '1020 Hull Street', 'Baltimore', 'Estados Unidos', 'https://www.underarmour.com');
+
+INSERT INTO Review (rating, comment, reviewer_name, reviewer_email, review_title, helpful_votes, is_verified)
+VALUES
+    (5, 'Excelente producto, lo recomiendo totalmente. Muy buena calidad.', 'Juan Pérez', 'juan.perez@email.com', 'Producto excelente', 3, 1),
+    (4, 'Buena calidad, pero el envío tardó un poco más de lo esperado.', 'María López', 'maria.lopez@email.com', 'Buena calidad', 2, 1),
+    (3, 'El producto es bueno, pero esperaba mejores características.', 'Carlos García', 'carlos.garcia@email.com', 'Producto regular', 1, 0),
+    (5, 'Me encanta este producto, cumple con todas mis expectativas.', 'Ana Martínez', 'ana.martinez@email.com', 'Producto excepcional', 5, 1),
+    (2, 'No me gustó mucho, no era lo que esperaba según la descripción.', 'Luis Rodríguez', 'luis.rodriguez@email.com', 'Producto decepcionante', 0, 0);
+
+
+
+-- Insertar 5 registros en la tabla Warehouse
+
+INSERT INTO Warehouse (name, location, capacity, status, manager_name, manager_contact) 
+VALUES 
+    ('Almacén Central', 'Madrid, España', 1000, 'active', 'Juan Pérez', '987654321'),
+    ('Almacén Norte', 'Barcelona, España', 500, 'inactive', 'Ana García', '912345678'),
+    ('Almacén Sur', 'Valencia, España', 750, 'active', 'Carlos Rodríguez', '934567890'),
+    ('Almacén Este', 'Sevilla, España', 300, 'active', NULL, NULL),
+    ('Almacén Oeste', 'Bilbao, España', 1200, 'inactive', 'Luis Martín', '923456789');
+
+
+
+-- Eliminar productos específicos de la tabla Product
+DELETE FROM Product WHERE code IN ('P001', 'P002', 'P003', 'P004', 'P005');
+
+SELECT * FROM product;
+SELECT * FROM  review;
+SELECT * FROM supplier;
+SELECT * FROM  warehouse;
+SELECT * FROM Products;
+
+
+SELECT 
+    p.id AS ProductID,
+    p.name AS ProductName,
+    s.name AS SupplierName,
+    s.contact_info AS SupplierContact,
+    r.rating AS ReviewRating,
+    r.comment AS ReviewComment,
+    w.location AS WarehouseLocation,
+    w.stock_available AS StockAvailable
+FROM Product p
+LEFT JOIN Supplier s ON p.id = s.product_id
+LEFT JOIN Review r ON p.id = r.product_id
+LEFT JOIN Warehouse w ON p.id = w.product_id;
+
+
+DROP TABLE supplier;
+DROP TABLE review;
+DROP TABLE warehouse
+
+
+
